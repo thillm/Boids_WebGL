@@ -1,26 +1,30 @@
 
 boxHW = 50.0;
-MAX_FORCE = 1.0;
+MAX_FORCE = 15;
 MAX_SPEED = 15.0;
 
 spawnFlock = function(){
-	var start = [5,0.0,-50];
-    var velocity = [1.0, 0.0, 0.0];
-    var flockUp = [0.0, 1.0, 0.0];
+	var start = [5,0.0,0];
+    var velocity = [0, 1.0, 0.0];
+    var flockUp = [1.0, 0.0, 0.0];
 
 	boids = [];
-	for(var i=0; i < 3; i++){
+	for(var i=0; i < 300; i++){
 		var position = vec3.create();
-		vec3.add(start,[-2 * i,0,0],position);
+		position[0] = -0.02 * i;
+		position[1] = 0.02*i;
+		position[2] = -0.01*i;
+		vec3.add(start,position,position);
 		var vel = vec3.create();
 		vel.set(velocity);
 		var up = vec3.create();
 		up.set(flockUp); 
 		var boidMember = new boid(position,vel,up,1.0);
 		boidMember.update(0.0);
-		var sep = new behavior(0.1,10.0,180,seperation,boidMember);
-		var coh = new behavior(100,10.0,180,cohesion,boidMember);
+		var sep = new behavior(0.5,10.0,180,seperation,boidMember);
+		var coh = new behavior(2,10.0,180,cohesion,boidMember);
 		boidMember.addBehavior(sep);
+		boidMember.addBehavior(coh);
 		boids.push(boidMember);
 	}
 	return boids;
@@ -43,14 +47,18 @@ seperation = function(neighborhood,boid){
 
 cohesion = function(neighborhood,boid){
 	var stear = vec3.create();
-	var average = vec3.create();
-	for(var i=0; i<neighborhood.length; i++){
-		vec3.add(average,neighborhood[i].position);
+	if(neighborhood.length > 0){
+		var average = vec3.create();
+		for(var i=0; i<neighborhood.length; i++){
+			vec3.add(average,neighborhood[i].position);
+		}
+		vec3.scale(average,neighborhood.length);
+		vec3.subtract(average,boid.position,stear);
+		vec3.normalize(stear);
 	}
-	average.scale(average,neighborhood.length);
-	vec3.subtract(average,boid.position,stear);
-	vec3.normalize(stear);
 	return stear;
 }
+
+
 
 

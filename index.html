@@ -168,6 +168,7 @@
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
         mat4.identity(mvMatrix);
+        mat4.translate(mvMatrix, [0.0, 0.0, -50.0]);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, boidVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -196,12 +197,13 @@
         if (lastTime != 0) {
             var elapsed = (timeNow - lastTime)/1000;
             for(var i=0; i < boids.length; i++){
-                boids[i].update(elapsed);
-                console.log("boid["+i +"] pos:["+boids[i].position[0]+","+boids[i].position[1]+","+boids[i].position[2]+"]");
+               boids[i].update(elapsed);
+               //console.log("boid["+i +"] pos:["+boids[i].position[0]+","+boids[i].position[1]+","+boids[i].position[2]+"]");
+               //console.log("boid["+i +"] up:["+boids[i].up[0]+","+boids[i].up[1]+","+boids[i].up[2]+"]");
 
             }
             for(var i=0; i < boids.length; i++){
-                boids[i].updateStearing(boids);
+                boids[i].updateStearing(boids,elapsed);
             }
         }
         lastTime = timeNow;

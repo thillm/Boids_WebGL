@@ -34,11 +34,11 @@ boid = function(position,velocity,up,mass){
 		vec3.normalize(this.velocity,this.forward);
 		vec3.cross(this.forward,this.up,this.side);
 		vec3.normalize(this.side);
-		vec3.cross(this.forward,this.side,this.up);
+		vec3.cross(this.side,this.forward,this.up);
 		vec3.normalize(this.up);
 	}
 
-	this.updateStearing = function(others){
+	this.updateStearing = function(others,delta){
 		var steerVec = vec3.create();
 		for(var i=0; i<this.behaviors.length;i++){
 			this.behaviors[i].clearNeighborhood();
@@ -59,7 +59,7 @@ boid = function(position,velocity,up,mass){
 			vec3.normalize(steerVec);
 			vec3.scale(steerVec,MAX_FORCE);
 		}
-		vec3.scale(steerVec,(1/mass));
+		vec3.scale(steerVec,(delta/mass));
 		vec3.add(velocity,steerVec);
 		len = vec3.length(velocity);
 		if(len > MAX_SPEED){
