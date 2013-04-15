@@ -1,15 +1,15 @@
 
 boxHW = 50.0;
 MAX_FORCE = 15;
-MAX_SPEED = 15.0;
+MAX_SPEED = 10.0;
 
 spawnFlock = function(){
 	var start = [5,0.0,0];
-    var velocity = [0, 1.0, 0.0];
+    var velocity = [1, 0, 0.0];
     var flockUp = [1.0, 0.0, 0.0];
 
 	boids = [];
-	for(var i=0; i < 300; i++){
+	for(var i=0; i < 50; i++){
 		var position = vec3.create();
 		position[0] = -0.02 * i;
 		position[1] = 0.02*i;
@@ -21,8 +21,8 @@ spawnFlock = function(){
 		up.set(flockUp); 
 		var boidMember = new boid(position,vel,up,1.0);
 		boidMember.update(0.0);
-		var sep = new behavior(0.5,10.0,180,seperation,boidMember);
-		var coh = new behavior(2,10.0,180,cohesion,boidMember);
+		var sep = new behavior(0.2,20.0,180,seperation,boidMember);
+		var coh = new behavior(1,20.0,180,cohesion,boidMember);
 		boidMember.addBehavior(sep);
 		boidMember.addBehavior(coh);
 		boids.push(boidMember);

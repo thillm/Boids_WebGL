@@ -32,7 +32,7 @@ boid = function(position,velocity,up,mass){
 			position[2] = -boxHW;
 		}
 		vec3.normalize(this.velocity,this.forward);
-		vec3.cross(this.forward,this.up,this.side);
+		vec3.cross(this.forward,[0,1,0],this.side);
 		vec3.normalize(this.side);
 		vec3.cross(this.side,this.forward,this.up);
 		vec3.normalize(this.up);
@@ -69,10 +69,11 @@ boid = function(position,velocity,up,mass){
 	}
 
 	this.getTransformation = function(){
-		var transform = [this.forward[0],  this.up[0],       this.side[0],    0,
-						  this.forward[1],  this.up[1],       this.side[1],    0,
-						  this.forward[2],  this.up[2],       this.side[2],    0,
-						  this.position[0], this.position[1], this.position[2],1 ];
+
+		var transform = [ this.forward[0],  this.forward[1],       this.forward[2],    0,
+						  this.up[0],       this.up[1],            this.up[2],         0,
+						  this.side[0],     this.side[1],          this.side[2],       0,
+						  this.position[0], this.position[1],      this.position[2],   1 ];
 		return transform;
 	}
 };
