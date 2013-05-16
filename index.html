@@ -166,25 +166,26 @@
 
     var boids = [];
     function initBoids(){
-        boids[0] = spawnFlock([-5,5.0,0],[3,0,0],10,0);
-        linkBehavior(boids[0],0.1,3.0,180,seperation);
-        linkBehavior(boids[0],1.0,15.0,180,cohesion);
-        linkBehavior(boids[0],0.1,5,180,alignment);
-        
-        boids[1] = spawnFlock([5,-5.0,0],[-1,0,0],10,1);
-        linkBehavior(boids[1],0.1,3.0,180,seperation);
-        linkBehavior(boids[1],20,15.0,180,cohesion);
-        linkBehavior(boids[1],0.5,20,180,alignment);
+        boids[0] = spawnFlock([-5,5.0,0],[1,0,0],20,0);
+        linkBehavior(boids[0],0.1,8.0,180,seperation);
+        linkBehavior(boids[0],1.0,15.0,90,cohesion);
+        linkBehavior(boids[0],0.1,5,90,alignment);
+
+       // boids[1] = spawnFlock([5,-5.0,0],[-1,0,0],10,1);
+        //linkBehavior(boids[1],0.1,3.0,180,seperation);
+        //linkBehavior(boids[1],5,15.0,180,cohesion);
+        //linkBehavior(boids[1],0.5,20,180,alignment);
+
     }
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 200.0, pMatrix);
+        mat4.perspective(70, gl.viewportWidth / gl.viewportHeight, 0.1, 300.0, pMatrix);
 
         mat4.identity(mvMatrix);
-        mat4.translate(mvMatrix, [0.0, 0.0, -75.0]);
+        mat4.translate(mvMatrix, [0.0, 0.0, -100.0]);
 
         // draw walls
         gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexPositionBuffer);
@@ -376,7 +377,8 @@
     <p>
         <span id="debug">[test]</span>
     <p/>
-    <canvas id="BoidTest" style="border: none;" width="500" height="500"></canvas>
+
+    <canvas id="BoidTest" style="border: none; padding-left: 10%; " width="800" height="600"></canvas>
 
     <br/>
 </body>
