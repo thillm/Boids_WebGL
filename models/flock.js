@@ -1,6 +1,6 @@
 
 boxHW = 22.0;
-halfWidths = [22.0,22.0,50.0];
+halfWidths = [72.0,72.0,60.0];
 MAX_FORCE = 15;
 MAX_SPEED = 10.0;
 spread = 5

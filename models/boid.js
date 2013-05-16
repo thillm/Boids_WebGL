@@ -74,7 +74,9 @@ boid = function(position,velocity,up,mass,flockId){
 			}
 		}
 		for(var i=0; i<this.behaviors.length;i++){
-			vec3.add(steerVec,this.behaviors[i].steer());
+			var sVec = this.behaviors[i].steer();
+			//console.log(sVec);
+			vec3.add(steerVec,sVec);
 		}
 		var len = vec3.length(steerVec);
 		if(len > MAX_FORCE){
@@ -100,15 +102,18 @@ boid = function(position,velocity,up,mass,flockId){
 	}
 };
 
-behavior = function (weight,distance,angle,executor,boid){
+behavior = function (weight,mDist,angle,executor,boid){
 	this.boid = boid;
 	this.weight = weight;
-	this.distance = distance;
+	this.mDist = mDist;
 	this.minCosangle = Math.cos(degToRad(angle));
 	this.neighborhood = [];
 	this.addIfInNeighborhood = function(other){
 		var cosAngle = vec3.dot(this.boid.forward,other.forward);
-		if(cosAngle >= this.minCosangle){
+		var disV = vec3.create();
+		vec3.subtract(this.boid.position,other.position,disV);
+		var distance = vec3.length(disV);
+		if(distance <= this.mDist && cosAngle >= this.minCosangle){
 			this.neighborhood.push(other);
 		}
 	}
