@@ -150,20 +150,27 @@
     var boidVertexPositionBuffer;
     var boidVertexColorBuffer;
 
+    var wallVertexPositionBuffer;
+    var wallVertexColorBuffer;
+
 
     function initBuffers() {
         boidVertexPositionBuffer = gl.createBuffer();
         boidVertexColorBuffer = gl.createBuffer();
         setupPyramidBuffers(boidVertexPositionBuffer,boidVertexColorBuffer,gl);
+    
+        wallVertexPositionBuffer = gl.createBuffer();
+        wallVertexColorBuffer = gl.createBuffer();
+        setupWallBuffers(wallVertexPositionBuffer,wallVertexColorBuffer,gl);
     }
 
     var boids = [];
     function initBoids(){
-        boids[0] = spawnFlock([-5,5.0,0],[1,0,0],10,0);
+        boids[0] = spawnFlock([-5,5.0,0],[3,0,0],10,0);
         linkBehavior(boids[0],0.1,3.0,180,seperation);
-        linkBehavior(boids[0],20.0,15.0,180,cohesion);
+        linkBehavior(boids[0],1.0,15.0,180,cohesion);
         linkBehavior(boids[0],0.1,5,180,alignment);
-
+        
         boids[1] = spawnFlock([5,-5.0,0],[-1,0,0],10,1);
         linkBehavior(boids[1],0.1,3.0,180,seperation);
         linkBehavior(boids[1],20,15.0,180,cohesion);
@@ -174,16 +181,25 @@
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 200.0, pMatrix);
 
         mat4.identity(mvMatrix);
-        mat4.translate(mvMatrix, [0.0, 0.0, -50.0]);
+        mat4.translate(mvMatrix, [0.0, 0.0, -75.0]);
 
+        // draw walls
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, wallVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexColorBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, wallVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+          setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLES, 0, wallVertexPositionBuffer.numItems);
+
+        // draw boids
         gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, boidVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
         gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, boidVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
         for (var j=0; j<boids.length; j++){ // for each flock
             for(var i=0; i < boids[j].length; i++){
                 //mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
@@ -243,6 +259,110 @@
 
         tick();
     }
+
+    setupWallBuffers = function (wallVertexPositionBuffer,wallVertexColorBuffer,gl) {
+        var hwx = halfWidths[0];
+        var hwy = halfWidths[1];
+        var hwz = halfWidths[2];
+        // wall vertices
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexPositionBuffer);
+        var vertices = [
+            // Rear wall
+            -hwx,  hwy, -hwz,
+            -hwx, -hwy, -hwz,
+             hwx,  hwy, -hwz,
+
+            -hwx, -hwy, -hwz,
+             hwx, -hwy, -hwz,
+             hwx,  hwy, -hwz,
+
+             // Left Wall
+            -hwx, hwy, hwz,
+            -hwx, -hwy, hwx,
+            -hwx, -hwy, -hwz,
+
+            -hwx, hwy, hwz,
+            -hwx, -hwy, -hwz,
+            -hwx, hwy, -hwz,
+
+            // Right Wall
+             hwx, hwy, hwz,
+             hwx, -hwy, hwx,
+             hwx, -hwy, -hwz,
+
+             hwx, hwy, hwz,
+             hwx, -hwy, -hwz,
+             hwx, hwy, -hwz,
+
+             // Bottom Wall
+             -hwx, -hwy, -hwz,
+             -hwx, -hwy, hwz,
+             hwx, -hwy, -hwz,
+             -hwx, -hwy, hwz, 
+             hwx, -hwy, hwz,
+             hwx, -hwy, -hwz,
+
+             // Top Wall
+             -hwx, hwy, -hwz,
+             -hwx, hwy, hwz,
+             hwx, hwy, -hwz,
+             -hwx, hwy, hwz, 
+             hwx, hwy, hwz,
+             hwx, hwy, -hwz
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        wallVertexPositionBuffer.itemSize = 3;
+        wallVertexPositionBuffer.numItems = 30;
+
+        // wall colors
+        gl.bindBuffer(gl.ARRAY_BUFFER, wallVertexColorBuffer);
+        var colors = [
+            // Rear Wall
+            0.1, 0.0, 0.1, 1.0,
+            0.12, 0.0, 0.12, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+            0.12, 0.0, 0.12, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+
+            // Left wall
+            0.15, 0.0, 0.15, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+
+            // Right wall
+            0.15, 0.0, 0.15, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.1, 0.0, 0.1, 1.0,
+
+            // Bottom Wall
+            0.15, 0.0, 0.15, 1.0,
+            0.20, 0.0, 0.20, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.20, 0.0, 0.20, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+
+            // Top Wall
+            0.15, 0.0, 0.15, 1.0,
+            0.20, 0.0, 0.20, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.20, 0.0, 0.20, 1.0,
+            0.15, 0.0, 0.15, 1.0,
+            0.15, 0.0, 0.15, 1.0
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+        wallVertexColorBuffer.itemSize = 4;
+        wallVertexColorBuffer.numItems = 30;
+    };
+
+
 
 </script>
 

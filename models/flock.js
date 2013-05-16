@@ -1,7 +1,7 @@
 
 boxHW = 22.0;
 halfWidths = [22.0,22.0,50.0];
-MAX_FORCE = 15;
+MAX_FORCE = 50;
 MAX_SPEED = 10.0;
 spread = 5
 
@@ -74,7 +74,7 @@ alignment = function(neighborhood,boid){
 	var steer = vec3.create(); 
 	if (neighborhood.length > 0){
 		for (var i=0; i<neighborhood.length; i++){
-			vec3.add(steer,neighborhood[i].forward);
+			vec3.add(steer,neighborhood[i].forward,steer);
 		}
 		vec3.scale(steer,neighborhood.length);
 		vec3.normalize(steer);
@@ -83,6 +83,32 @@ alignment = function(neighborhood,boid){
 
 }
 
+wallAvoidance = function(neighborhood,boid){
+	var steer = vec3.create();
+	var distToMaxX = boxHW - boid.position[0] + 0.0001;
+	var distToMinX = Math.abs(-boxHW - boid.position[0] + 0.0001);
+	var distToMaxY = boxHW - boid.position[1] + 0.0001;
+	var distToMinY = Math.abs(-boxHW - boid.position[1] + 0.0001);
+	var distToMaxZ = boxHW - boid.position[2] + 0.0001;
+	var distToMinZ = Math.abs(-boxHW - boid.position[2] + 0.0001);
+	
+	var posXWallDir = [0,0.5,1];
+	vec3.normalize(posXWallDir);
+	var negXWallDir = [0,-0.5,-1];
+	vec3.normalize(negXWallDir);
+	var posZWallDir = [-1,0,0];
+	var negZWallDir = [1,0,0];
+	var posYWallDir = [1,0,0];
+	var negYWallDir = [-1,0,0];
 
+	vec3.add(steer,vec3.scale(posXWallDir,1/distToMaxX));
+	vec3.add(steer,vec3.scale(negXWallDir,1/distToMinX));
+	vec3.add(steer,vec3.scale(posZWallDir,1/distToMaxZ));
+	vec3.add(steer,vec3.scale(negZWallDir,1/distToMinZ));
+	vec3.add(steer,vec3.scale(posYWallDir,1/distToMaxY));
+	vec3.add(steer,vec3.scale(negYWallDir,1/distToMinY));
+	//vec3.normalize(steer);
+	return steer;
+}
 
 
