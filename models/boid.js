@@ -1,4 +1,7 @@
-boid = function(position,velocity,up,mass){
+
+var wrap = true;
+
+boid = function(position,velocity,up,mass,flockId){
 	this.behaviors = [];
 	this.position = position;
 	this.velocity = velocity;
@@ -6,6 +9,7 @@ boid = function(position,velocity,up,mass){
 	this.up = up;
 	this.mass = mass;
 	this.side = vec3.create();
+	this.flockId = flockId;
 
 	this.addBehavior = function(toAdd){
 		this.behaviors.push(toAdd);
@@ -13,23 +17,41 @@ boid = function(position,velocity,up,mass){
 
 	//boid functions
 	this.update = function(delta){
+		// update position based on velocity
 		this.position[0] += (this.velocity[0]*delta);
-		if(position[0] < -boxHW){
-			position[0] = boxHW;
-		}else if(position[0] > boxHW){
-			position[0] = -boxHW;
-		}
 		this.position[1] += (this.velocity[1]*delta);
-		if(position[1] < -boxHW){
-			position[1] = boxHW;
-		}else if(position[1] > boxHW){
-			position[1] = -boxHW;
-		}
 		this.position[2] += (this.velocity[2]*delta);
-		if(position[2] < -boxHW){
-			position[2] = boxHW;
-		}else if(position[2] > boxHW){
-			position[2] = -boxHW;
+
+		if (wrap){
+			if(position[0] < -halfWidths[0]){
+				position[0] = halfWidths[0];
+			}else if(position[0] > halfWidths[0]){
+				position[0] = -halfWidths[0];
+			}
+			if(position[1] < -halfWidths[1]){
+				position[1] = halfWidths[1];
+			}else if(position[1] > halfWidths[1]){
+				position[1] = -halfWidths[1];
+			}
+			if(position[2] < -halfWidths[2]){
+				position[2] = halfWidths[2];
+			}else if(position[2] > halfWidths[2]){
+				position[2] = -halfWidths[2];
+			}
+		}
+		else { // 'collision avoidance' moves position, ideally should adjust vector instead
+			var distToMaxX = boxHW - this.position[0] + 0.0001;
+			var distToMinX = Math.abs(-boxHW - this.position[0] + 0.0001);
+			var distToMaxY = boxHW - this.position[1] + 0.0001;
+			var distToMinY = Math.abs(-boxHW - this.position[1] + 0.0001);
+			var distToMaxZ = boxHW - this.position[2] + 0.0001;
+			var distToMinZ = Math.abs(-boxHW - this.position[2] + 0.0001);
+			this.velocity[0] -= 0.1/distToMaxX;
+			this.velocity[0] += 0.1/distToMinX;
+			this.velocity[1] -= 1/distToMaxY;
+			this.velocity[1] += 1/distToMinY;
+			this.velocity[2] -= 1/distToMaxZ;
+			this.velocity[2] += 1/distToMinZ;
 		}
 		vec3.normalize(this.velocity,this.forward);
 		vec3.cross(this.forward,[0,1,0],this.side);

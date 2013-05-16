@@ -4,6 +4,7 @@
 <title>WebGL Boids</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
+<script type="text/javascript" src="libs/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="libs/glMatrix-0.9.5.min.js"></script>
 <script type="text/javascript" src="libs/webgl-utils.js"></script>
 <script type="text/javascript" src="models/boid.js"></script>
@@ -156,9 +157,17 @@
         setupPyramidBuffers(boidVertexPositionBuffer,boidVertexColorBuffer,gl);
     }
 
-    var boids;
+    var boids = [];
     function initBoids(){
-        boids = spawnFlock();
+        boids[0] = spawnFlock([-5,5.0,0],[1,0,0],10,0);
+        linkBehavior(boids[0],0.1,3.0,180,seperation);
+        linkBehavior(boids[0],20.0,15.0,180,cohesion);
+        linkBehavior(boids[0],0.1,5,180,alignment);
+
+        boids[1] = spawnFlock([5,-5.0,0],[-1,0,0],10,1);
+        linkBehavior(boids[1],0.1,3.0,180,seperation);
+        linkBehavior(boids[1],20,15.0,180,cohesion);
+        linkBehavior(boids[1],0.5,20,180,alignment);
     }
 
     function drawScene() {
@@ -175,17 +184,18 @@
 
         gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexColorBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, boidVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-        for(var i=0; i < boids.length; i++){
-            //mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
-            mvPushMatrix();
-            //mat4.rotate(mvMatrix, degToRad(rPyramid), [0, 1, 0]);
-            var boidTransform = boids[i].getTransformation();
-            mat4.multiply(mvMatrix, boidTransform,mvMatrix);
-            mat4.rotate(mvMatrix, degToRad(-90), [0, 0, 1]);
-            setMatrixUniforms();
-            gl.drawArrays(gl.TRIANGLES, 0, boidVertexPositionBuffer.numItems);
-            mvPopMatrix();
+        for (var j=0; j<boids.length; j++){ // for each flock
+            for(var i=0; i < boids[j].length; i++){
+                //mat4.translate(mvMatrix, [-1.5, 0.0, -8.0]);
+                mvPushMatrix();
+                //mat4.rotate(mvMatrix, degToRad(rPyramid), [0, 1, 0]);
+                var boidTransform = boids[j][i].getTransformation();
+                mat4.multiply(mvMatrix, boidTransform,mvMatrix);
+                mat4.rotate(mvMatrix, degToRad(-90), [0, 0, 1]);
+                setMatrixUniforms();
+                gl.drawArrays(gl.TRIANGLES, 0, boidVertexPositionBuffer.numItems);
+                mvPopMatrix();
+            }
         }
     }
 
@@ -196,15 +206,19 @@
         var timeNow = new Date().getTime();
         if (lastTime != 0) {
             var elapsed = (timeNow - lastTime)/1000;
-            for(var i=0; i < boids.length; i++){
-               boids[i].update(elapsed);
-               //console.log("boid["+i +"] pos:["+boids[i].position[0]+","+boids[i].position[1]+","+boids[i].position[2]+"]");
-               console.log("boid["+i +"] up:["+boids[i].up[0]+","+boids[i].up[1]+","+boids[i].up[2]+"]");
-               console.log("boid["+i +"] forward:["+boids[i].forward[0]+","+boids[i].forward[1]+","+boids[i].forward[2]+"]");
+            for (var j=0; j<boids.length; j++){ // for each flock
+                for(var i=0; i < boids[j].length; i++){
+                   boids[j][i].update(elapsed);
+                   //console.log("boid["+i +"] pos:["+boids[i].position[0]+","+boids[i].position[1]+","+boids[i].position[2]+"]");
+                   //console.log("boid["+i +"] up:["+boids[i].up[0]+","+boids[i].up[1]+","+boids[i].up[2]+"]");
+                   //console.log("boid["+i +"] forward:["+boids[i].forward[0]+","+boids[i].forward[1]+","+boids[i].forward[2]+"]");
 
+                }
             }
-            for(var i=0; i < boids.length; i++){
-                boids[i].updateStearing(boids,elapsed);
+            for (var j=0; j<boids.length; j++){ // for each flock
+                for(var i=0; i < boids[j].length; i++){
+                    boids[j][i].updateStearing(boids[j],elapsed);
+                }
             }
         }
         lastTime = timeNow;
