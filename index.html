@@ -166,14 +166,17 @@
 
     var boids = [];
     function initBoids(){
-        boids[0] = spawnFlock([-5,5.0,0],[1,0,0],20,0);
-        linkBehavior(boids[0],0.1,8.0,180,seperation);
-        linkBehavior(boids[0],1.0,15.0,90,cohesion);
-        linkBehavior(boids[0],0.1,5,90,alignment);
+        boids[0] = spawnFlock([-55,5.0,0],[3,0,0],20,0);
+        boids[0]= boids[0].concat(spawnFlock([55,5.0,0],[-3,0,0],20,0));
+        boids[0]= boids[0].concat(spawnFlock([0,-15.0,0],[-5,2,5],10,0));
+        boids[0]= boids[0].concat(spawnFlock([2,45.0,0],[5,-2,-5],10,0));
+        boids[0]= boids[0].concat(spawnFlock([-20,-55.0,20],[-2,1,-5],10,0));
+        linkBehavior(boids[0],20.6,8.0,180,seperation);
+        linkBehavior(boids[0],20.6,15.0,180,cohesion);
+        linkBehavior(boids[0],20.5,5,180,alignment);
 
-       // boids[1] = spawnFlock([5,-5.0,0],[-1,0,0],10,1);
-        //linkBehavior(boids[1],0.1,3.0,180,seperation);
-        //linkBehavior(boids[1],5,15.0,180,cohesion);
+        //linkBehavior(boids[1],0.6,3.0,180,seperation);
+        //linkBehavior(boids[1],0.6,15.0,180,cohesion);
         //linkBehavior(boids[1],0.5,20,180,alignment);
 
     }

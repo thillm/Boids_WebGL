@@ -1,8 +1,9 @@
 boxHW = 22.0;
 halfWidths = [72.0,72.0,60.0];
-MAX_FORCE = 15;
-MAX_SPEED = 10.0;
+MAX_FORCE = 155;
+MAX_SPEED = 15.0;
 spread = 5
+buffer = 10.0;
 
 spawnFlock = function(startPos,initVel,numBoids,flockId){
 	//var start = [5,0.0,0];
@@ -62,7 +63,7 @@ cohesion = function(neighborhood,boid){
 		for(var i=0; i<neighborhood.length; i++){
 			vec3.add(average,neighborhood[i].position);
 		}
-		vec3.scale(average,neighborhood.length);
+		vec3.scale(average,1.0/neighborhood.length);
 		vec3.subtract(average,boid.position,stear);
 		vec3.normalize(stear);
 	}
