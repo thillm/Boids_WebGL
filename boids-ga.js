@@ -15,8 +15,8 @@ $(document).ready(function(){
 		Environment.configure({'populationSize':popSize,'generations':generations, 'mutability':mutability,'populationLive':popDie,'populationBreed':popBreed,'pruneEqualFitness':false});
         Environment.init();
 		$('#configOptions').hide();
+		$('#result').hide();
 		$('#evaluationControls').show();
-		//webGLStart();
 	});
 
 	$('#next').click(function(){
@@ -26,6 +26,7 @@ $(document).ready(function(){
 				memberIndex = 0;
 			}
 			loadMember(memberIndex);
+			$('#result').hide();
 		}
 	});
 
@@ -36,6 +37,7 @@ $(document).ready(function(){
 				memberIndex = Environment.inhabitants.length-1;
 			}
 			loadMember(memberIndex);
+			$('#result').hide();
 		}
 	});
 
@@ -50,6 +52,31 @@ $(document).ready(function(){
 	$('#rateGroup').click(function(){
 		if(readyForRating){
 			userRating[memberIndex] = $('input[name=rating]:checked').val();
+		}
+	});
+	$('#showSave').click(function(){
+		if(readyForRating){
+			$('#result').html(getLoadText(Environment.inhabitants[memberIndex].chromosome));
+			$('#result').show();
+		}
+	});
+	$('#quit').click(function(){
+		$('#result').hide();
+		$('#evaluationControls').hide();
+		$('#configOptions').show();
+		readyForRating = false;
+	});
+	$('#loadButton').click(function(){
+		var loadString = $('#loadField').val();
+		var boidParams;
+		try{
+			boidParams = JSON.parse(loadString);
+			loadBoids(boidParams);
+			$('#result').html(getLoadText(boidParams));
+			$('#result').show();
+			$('#configOptions').hide();
+		}catch (e){
+			alert("Error: Invalid Load String.");
 		}
 	});
 });
@@ -122,5 +149,22 @@ Environment.interactiveStep = function(){
 }
 
 Environment.afterGeneration = function(generation){
-	Environment.generation();
+	if(generation >= Environment.generations){
+		$('#evaluationControls').hide();
+		var best = Environment.inhabitants[0];
+		loadMember(0);
+		$('#result').html(
+			"The most fit individual is being displayed! <br/>"+
+			getLoadText(best.chromosome)
+		);
+		$('#result').show();
+	}else{
+		Environment.generation();
+	}
+}
+
+function getLoadText(params){
+	var text = "Copy the text below to save the information for this boid animation. <br/> It can be loaded later by pasting the text and pressing the load button at the start screen <br/>"+
+			"<textarea rows='1' cols='50' onclick='this.focus();this.select()' readonly='readonly'>["+params.toString()+"]</textarea>";
+	return text;
 }

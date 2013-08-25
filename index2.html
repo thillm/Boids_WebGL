@@ -57,28 +57,38 @@
 
     <br/>
     <div id="configOptions">
+        <h1>Load a Previously Saved Animation</h1>
+        <label for="loadField">Load a saved boid animation:</label>
+        <input type="text" id="loadField" onclick='this.focus();this.select()' value='Paste Here'></input>
+        <button type="button" id="loadButton">Load</button>
+        <br/>
+        <h1>Create new Boid Animations Using a Genetic Algorithm</h1>
         <label for="numGenerations">Number of generations</label>
-        <input type="text" id="numGenerations" value='100'></input>
+        <input type="text" id="numGenerations" value='6'></input>
         <br />
         <label for="mutabilityPercent">Mutability percent</label>
-        <input type="text" id="mutabilityPercent" value='40'></input>
+        <input type="text" id="mutabilityPercent" value='80'></input>
         <br />
         <label for="populationSize">Population Size</label>
         <input type="text" id="populationSize" value='10'></input>
         <br />
         <label for="populationLive">Percent of Population that Lives on in the Next Generation</label>
-        <input type="text" id="populationLive" value='50'></input>
+        <input type="text" id="populationLive" value='10'></input>
         <br/>
         <label for="populationBreed">Percent of Population that Contributes Genes to the Next Generation</label>
         <input type="text" id="populationBreed" value='50'></input>
         <br/>
         <button type="button" id="start">Start</button>
         <br/>
+        <br/>
     </div>
     <div id="evaluationControls">
-        <button type="button" id="previous">Prev</button>
-        <div id='count'>? of ?</div>
-        <button type="button" id="next">Next</button>
+        <div style="float: left;">
+            <button type="button" id="previous">Prev</button>
+            <div id='count'>? of ?</div>
+            <button type="button" id="next">Next</button>
+            <button type="button" id="showSave">Save</button>
+        </div>
         <div id="rateGroup">
             <input type="radio" id="rate1" name="rating" value="1"/>
             <label for="rate1">1</label>
@@ -92,6 +102,11 @@
             <label for="rate2">5</label>
         </div>
         <button type="button" id="rateButton">Rate</button>
+        
+    </div>
+    <div id="result"> </div>
+    <div id="quitDiv">
+        <button type="button" id="quit">Return to Main</button>
     </div>
 </body>
 
