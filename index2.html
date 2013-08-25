@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<title>WebGL Boids</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="libs/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="libs/glMatrix-0.9.5.min.js"></script>
+<script type="text/javascript" src="libs/webgl-utils.js"></script>
+<script type="text/javascript" src="libs/evolvejs/environment.js"></script>
+<script type="text/javascript" src="models/boid.js"></script>
+<script type="text/javascript" src="models/pyramid.js"></script>
+<script type="text/javascript" src="models/flock.js"></script>
+
+
+<script id="shader-fs" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_FragColor = vColor;
+    }
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec4 aVertexColor;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor;
+    }
+</script>
+
+
+<script type="text/javascript" src="boid-main.js"> </script>
+<script type="text/javascript" src="boids-ga.js"></script>
+
+</head>
+
+
+<body onload="webGLStart();">
+    <!--
+    Testing Boids in Web GL!
+    <br />
+    <p>
+        <span id="debug">[test]</span>
+    <p/>
+    -->
+    <canvas id="BoidTest" style="border: none; padding-left: 10%; " width="800" height="600"></canvas>
+
+    <br/>
+    <div id="configOptions">
+        <label for="numGenerations">Number of generations</label>
+        <input type="text" id="numGenerations" value='100'></input>
+        <br />
+        <label for="mutabilityPercent">Mutability percent</label>
+        <input type="text" id="mutabilityPercent" value='40'></input>
+        <br />
+        <label for="populationSize">Population Size</label>
+        <input type="text" id="populationSize" value='10'></input>
+        <br />
+        <label for="populationLive">Percent of Population that Lives on in the Next Generation</label>
+        <input type="text" id="populationLive" value='50'></input>
+        <br/>
+        <label for="populationBreed">Percent of Population that Contributes Genes to the Next Generation</label>
+        <input type="text" id="populationBreed" value='50'></input>
+        <br/>
+        <button type="button" id="start">Start</button>
+        <br/>
+    </div>
+    <div id="evaluationControls">
+        <button type="button" id="previous">Prev</button>
+        <div id='count'>? of ?</div>
+        <button type="button" id="next">Next</button>
+        <div id="rateGroup">
+            <input type="radio" id="rate1" name="rating" value="1"/>
+            <label for="rate1">1</label>
+            <input type="radio" id="rate2" name="rating" value="2" />
+            <label for="rate2">2</label>
+            <input type="radio" id="rate3" name="rating" value="3" />
+            <label for="rate2">3</label>
+            <input type="radio" id="rate4" name="rating" value="4" />
+            <label for="rate2">4</label>
+            <input type="radio" id="rate5" name="rating" value="5" />
+            <label for="rate2">5</label>
+        </div>
+        <button type="button" id="rateButton">Rate</button>
+    </div>
+</body>
+
+</html>

@@ -1,9 +1,4 @@
-boxHW = 22.0;
-halfWidths = [72.0,72.0,60.0];
-MAX_FORCE = 155;
-MAX_SPEED = 15.0;
-spread = 5
-buffer = 10.0;
+
 
 spawnFlock = function(startPos,initVel,numBoids,flockId){
 	//var start = [5,0.0,0];
