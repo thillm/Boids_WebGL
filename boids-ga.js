@@ -164,7 +164,7 @@ Environment.afterGeneration = function(generation){
 }
 
 function getLoadText(params){
-	var text = "Copy the text below to save the information for this boid animation. <br/> It can be loaded later by pasting the text and pressing the load button at the start screen <br/>"+
+	var text = "Copy the text below to save the information for this boid animation. <br/> It can be loaded later by pasting the text and pressing the load button at the Main screen <br/>"+
 			"<textarea rows='1' cols='50' onclick='this.focus();this.select()' readonly='readonly'>["+params.toString()+"]</textarea>";
 	return text;
 }

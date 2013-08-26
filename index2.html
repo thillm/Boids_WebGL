@@ -1,7 +1,7 @@
 <html>
 
 <head>
-<title>WebGL Boids</title>
+<title>Interactive GA and Boids!</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 
 <script type="text/javascript" src="libs/jquery-1.9.1.min.js"></script>
@@ -51,12 +51,15 @@
     <br />
     <p>
         <span id="debug">[test]</span>
-    <p/>
+    <p/>style="text-align: center"
     -->
-    <canvas id="BoidTest" style="border: none; padding-left: 10%; " width="800" height="600"></canvas>
+    <div style="text-align: center">
+        <canvas id="BoidTest" style="border: none;" width="800" height="600"></canvas>
+    </div>
 
     <br/>
-    <div id="configOptions">
+    <div id="configOptions" style="text-align: center">
+        (Recomended to run in fullscreen. Toggle fullscreen with F11)
         <h1>Load a Previously Saved Animation</h1>
         <label for="loadField">Load a saved boid animation:</label>
         <input type="text" id="loadField" onclick='this.focus();this.select()' value='Paste Here'></input>
@@ -82,14 +85,23 @@
         <br/>
         <br/>
     </div>
-    <div id="evaluationControls">
-        <div style="float: left;">
-            <button type="button" id="previous">Prev</button>
-            <div id='count'>? of ?</div>
-            <button type="button" id="next">Next</button>
-            <button type="button" id="showSave">Save</button>
+    <div id="evaluationControls" style="text-align: center">
+        <div>
+            Rate each boid annimation relative to the other annimations in this generation. 
+            <br/> 
+            5 is the highest rating while 1 is the lowest.
+            <br/>
+            The higher rated annimations will continue and/or contribute genes in the next generation.
+            <br/>
         </div>
-        <div id="rateGroup">
+        <div style="display: inline-block;">
+            <button type="button" id="previous" style="float: left;margin: 5;">Prev</button>
+            <div id='count' style="float: left;margin: 5;">? of ?</div>
+            <button type="button" id="next" style="float: left;margin: 5;">Next</button>
+            <button type="button" id="showSave" style="float: left;margin: 5;">Save This Annimation</button>
+        </div>
+        <br/>
+        <div id="rateGroup" >
             <input type="radio" id="rate1" name="rating" value="1"/>
             <label for="rate1">1</label>
             <input type="radio" id="rate2" name="rating" value="2" />
@@ -101,11 +113,13 @@
             <input type="radio" id="rate5" name="rating" value="5" />
             <label for="rate2">5</label>
         </div>
-        <button type="button" id="rateButton">Rate</button>
+        <br/>
+        <button type="button" id="rateButton">Finished Rating This Generation</button>
         
     </div>
-    <div id="result"> </div>
-    <div id="quitDiv">
+    <br/>
+    <div id="result" style="text-align: center"> </div>
+    <div id="quitDiv" style="text-align: center">
         <button type="button" id="quit">Return to Main</button>
     </div>
 </body>
