@@ -1,5 +1,7 @@
 
-
+/*
+ *Creates a cluster of boids centered around a start position.
+ */
 spawnFlock = function(startPos,initVel,numBoids,flockId){
 	//var start = [5,0.0,0];
     //var velocity = [1, 0, 0.0];
@@ -30,12 +32,18 @@ spawnFlock = function(startPos,initVel,numBoids,flockId){
 	return boids;
 }
 
+/*
+ *Links a behavior function with each boid in the list.
+ */
 function linkBehavior(boidsList,weight,distance,angle,executor){
 	for (var j=0; j<boidsList.length; j++){
 		boidsList[j].addBehavior(new behavior(weight,distance,angle,executor,boidsList[j]));
 	}
 }
 
+/*
+ *The seperation behavior function
+ */
 seperation = function(neighborhood,boid){
 	var stear = vec3.create();
 	var toBoid = vec3.create();
@@ -51,6 +59,9 @@ seperation = function(neighborhood,boid){
 	return stear;
 }
 
+/*
+ *The cohesion behavior function
+ */
 cohesion = function(neighborhood,boid){
 	var stear = vec3.create();
 	if(neighborhood.length > 0){
@@ -65,6 +76,9 @@ cohesion = function(neighborhood,boid){
 	return stear;
 }
 
+/*
+ *The alignment behavior function
+ */
 alignment = function(neighborhood,boid){
 	var steer = vec3.create(); 
 	if (neighborhood.length > 0){

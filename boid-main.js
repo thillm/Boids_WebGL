@@ -27,6 +27,9 @@ buffer = 10.0;
 
 var gl;
 
+/*
+ *Initialize WebGL and store a reference in the gl var.
+ */
 function initGL(canvas) {
     try {
         gl = canvas.getContext("experimental-webgl");
@@ -39,7 +42,9 @@ function initGL(canvas) {
     }
 }
 
-
+/*
+ *Finds the target shader as a HTML component and compiles it.
+ */
 function getShader(gl, id) {
     var shaderScript = document.getElementById(id);
     if (!shaderScript) {
@@ -78,6 +83,9 @@ function getShader(gl, id) {
 
 var shaderProgram;
 
+/*
+ * Initialize the shaders and register them with WebGL.
+ */
 function initShaders() {
     var fragmentShader = getShader(gl, "shader-fs");
     var vertexShader = getShader(gl, "shader-vs");
@@ -91,8 +99,9 @@ function initShaders() {
         alert("Could not initialise shaders");
     }
 
-    gl.useProgram(shaderProgram);
-
+    gl.useProgram(shaderProgram);//registered with WebGL
+    
+    //Store shader attribute locations in a safe place in the shader program
     shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
@@ -104,16 +113,22 @@ function initShaders() {
 }
 
 
-var mvMatrix = mat4.create();
+var mvMatrix = mat4.create(); //Model View Matrix
 var mvMatrixStack = [];
-var pMatrix = mat4.create();
+var pMatrix = mat4.create(); //Perspective Matrix
 
+/*
+ *Push the current MV matrix on the stack
+ */
 function mvPushMatrix() {
     var copy = mat4.create();
     mat4.set(mvMatrix, copy);
     mvMatrixStack.push(copy);
 }
 
+/*
+ *Pop the last pushed MV matrix off the stack
+ */
 function mvPopMatrix() {
     if (mvMatrixStack.length == 0) {
         throw "Invalid popMatrix!";
@@ -121,13 +136,17 @@ function mvPopMatrix() {
     mvMatrix = mvMatrixStack.pop();
 }
 
-
+/*
+ *Update the matrices in the shader program.
+ */
 function setMatrixUniforms() {
     gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
     gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
 }
 
-
+/*
+ * Convert degrees to radians.
+ */
 function degToRad(degrees) {
     return degrees * Math.PI / 180;
 }
@@ -139,7 +158,9 @@ var boidVertexColorBuffer;
 var wallVertexPositionBuffer;
 var wallVertexColorBuffer;
 
-
+/*
+ *Create the boid and wall buffers.
+ */
 function initBuffers() {
     boidVertexPositionBuffer = gl.createBuffer();
     boidVertexColorBuffer = gl.createBuffer();
@@ -151,6 +172,9 @@ function initBuffers() {
 }
 
 var boids = [];
+/*
+ * Load a default boid simulation.
+ */
 function initBoids(){
     boids[0] = spawnFlock([-55,5.0,0],[3,0,0],20,0);
     boids[0]= boids[0].concat(spawnFlock([55,5.0,0],[-3,0,0],20,0));
@@ -167,6 +191,9 @@ function initBoids(){
 
 }
 
+/*
+ *Supply an array of 43 numbers between 0 and 1 to load a boid simulation.
+ */
 function loadBoids(parms){
     boids[0] = [];
     for(var i=0;i<NUM_FLOCKS;i++){
@@ -197,10 +224,16 @@ function loadBoids(parms){
     MAX_FORCE = MIN_FORCE + Math.round(parms[(NUM_FLOCKS*NUM_FLOCK_VARS)+7] * MAX_ADDED_FORCE);
 }
 
+/*
+ *Clears the current boid simulation.
+ */
 function clearBoids(){
     boids = [];
 }
 
+/*
+ * Renders the current frame.
+ */
 function drawScene() {
     gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -242,6 +275,9 @@ function drawScene() {
 
 var lastTime = 0;
 
+/*
+ *Updates the boid simulation
+ */
 function animate() {
     var timeNow = new Date().getTime();
     if (lastTime != 0) {
@@ -264,14 +300,18 @@ function animate() {
     lastTime = timeNow;
 }
 
-
+/*
+ *The main loop.
+ */
 function tick() {
     requestAnimFrame(tick);
     drawScene();
     animate();
 }
 
-
+/*
+ *Kicks off startup
+ */
 function webGLStart() {
     var canvas = document.getElementById("BoidTest");
     initGL(canvas);
@@ -284,6 +324,9 @@ function webGLStart() {
     tick();
 }
 
+/*
+ * Wall buffer information.
+ */
 setupWallBuffers = function (wallVertexPositionBuffer,wallVertexColorBuffer,gl) {
     var hwx = halfWidths[0];
     var hwy = halfWidths[1];

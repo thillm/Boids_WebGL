@@ -1,12 +1,12 @@
 readyForRating = false; //Are we waiting for user raiting
-memberIndex = 0;
-userRating = [];
-DEFAULT_RATING = 3;
+memberIndex = 0; //Index of the current boid simulation in the population
+userRating = []; //Array holding rating of current generation
+DEFAULT_RATING = 3; //Default user rating
 
 
 $(document).ready(function(){
-	$('#evaluationControls').hide();
-	$('#start').click(function(){
+	$('#evaluationControls').hide(); //hide evaluation controls at start
+	$('#start').click(function(){ //start button callback function
 		var popSize = $('#populationSize').val();
 		var generations = $('#numGenerations').val();
 		var mutability = Math.min($('#mutabilityPercent').val()/100,1);
@@ -19,7 +19,7 @@ $(document).ready(function(){
 		$('#evaluationControls').show();
 	});
 
-	$('#next').click(function(){
+	$('#next').click(function(){ //next button callback function
 		if(readyForRating){
 			memberIndex+=1;
 			if(memberIndex >= Environment.inhabitants.length){
@@ -30,7 +30,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#previous').click(function(){
+	$('#previous').click(function(){ //previous button callback function
 		if(readyForRating){
 			memberIndex-=1;
 			if(memberIndex < 0){
@@ -41,7 +41,7 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#rateButton').click(function(){
+	$('#rateButton').click(function(){ //rateButton callback function
 		if(readyForRating){
 			readyForRating = false;
 			clearBoids();
@@ -49,24 +49,24 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#rateGroup').click(function(){
+	$('#rateGroup').click(function(){ //handles radio button clicks
 		if(readyForRating){
 			userRating[memberIndex] = $('input[name=rating]:checked').val();
 		}
 	});
-	$('#showSave').click(function(){
+	$('#showSave').click(function(){ //save button callback
 		if(readyForRating){
 			$('#result').html(getLoadText(Environment.inhabitants[memberIndex].chromosome));
 			$('#result').show();
 		}
 	});
-	$('#quit').click(function(){
+	$('#quit').click(function(){ //quit button callback
 		$('#result').hide();
 		$('#evaluationControls').hide();
 		$('#configOptions').show();
 		readyForRating = false;
 	});
-	$('#loadButton').click(function(){
+	$('#loadButton').click(function(){ //load button callback
 		var loadString = $('#loadField').val();
 		var boidParams;
 		try{
@@ -81,6 +81,10 @@ $(document).ready(function(){
 	});
 });
 
+/*
+ *Load a member of the current population.
+ *index - index in the population
+ */
 function loadMember(index){
 	if(index < Environment.inhabitants.length){
 		memberChromosome = Environment.inhabitants[index].chromosome;
@@ -112,6 +116,9 @@ function loadMember(index){
 	}
 }
 
+/*
+ *Constructor for a new individual
+ */
 Environment.Individual = function(){
 	this.fitness = 0;
 	this.chromosomeLength = 43;
@@ -135,10 +142,16 @@ Environment.Individual = function(){
     }
 }
 
+/*
+ *Fitness function. Just looks at user rating.
+ */
 Environment.fitnessFunction = function(individual){
 	return userRating[Environment.inhabitants.indexOf(individual)];
 }
 
+/*
+ *Starts the interactive rating for the current generation.
+ */
 Environment.interactiveStep = function(){
 	for(var i=0; i<Environment.inhabitants.length;i++){
 		userRating[i] = DEFAULT_RATING;
@@ -148,10 +161,18 @@ Environment.interactiveStep = function(){
     readyForRating = true;
 }
 
+/*
+ *Updates the generation count.
+ */
 Environment.beforeGeneration = function(generation){
 	$('#genCount').html('Generation #: '+generation);
 }
 
+/*
+ *Check if the IGA is finished.
+ *If it is, shows the best individual.
+ *If not, continues to the next generation.
+ */
 Environment.afterGeneration = function(generation){
 	if(generation >= Environment.generations){
 		$('#evaluationControls').hide();
@@ -167,6 +188,9 @@ Environment.afterGeneration = function(generation){
 	}
 }
 
+/*
+ *Generates the text needed to load a boid simulation.
+ */
 function getLoadText(params){
 	var text = "Copy the text below to save the information for this boid animation. <br/> It can be loaded later by pasting the text and pressing the load button at the Main screen <br/>"+
 			"<textarea rows='1' cols='50' onclick='this.focus();this.select()' readonly='readonly'>["+params.toString()+"]</textarea>";
