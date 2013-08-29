@@ -70,16 +70,16 @@
         <input type="text" id="numGenerations" value='6'></input>
         <br />
         <label for="mutabilityPercent">Mutability percent</label>
-        <input type="text" id="mutabilityPercent" value='80'></input>
+        <input type="text" id="mutabilityPercent" value='90'></input>
         <br />
         <label for="populationSize">Population Size</label>
-        <input type="text" id="populationSize" value='10'></input>
+        <input type="text" id="populationSize" value='16'></input>
         <br />
         <label for="populationLive">Percent of Population that Lives on in the Next Generation</label>
         <input type="text" id="populationLive" value='10'></input>
         <br/>
         <label for="populationBreed">Percent of Population that Contributes Genes to the Next Generation</label>
-        <input type="text" id="populationBreed" value='50'></input>
+        <input type="text" id="populationBreed" value='25'></input>
         <br/>
         <button type="button" id="start">Start</button>
         <br/>
@@ -87,18 +87,19 @@
     </div>
     <div id="evaluationControls" style="text-align: center">
         <div>
-            Rate each boid annimation relative to the other annimations in this generation. 
+            Rate each boid animation relative to the other animations in this generation. 
             <br/> 
             5 is the highest rating while 1 is the lowest.
             <br/>
-            The higher rated annimations will continue and/or contribute genes in the next generation.
+            The higher rated animations will continue and/or contribute genes in the next generation.
             <br/>
         </div>
         <div style="display: inline-block;">
             <button type="button" id="previous" style="float: left;margin: 5;">Prev</button>
             <div id='count' style="float: left;margin: 5;">? of ?</div>
             <button type="button" id="next" style="float: left;margin: 5;">Next</button>
-            <button type="button" id="showSave" style="float: left;margin: 5;">Save This Annimation</button>
+            <button type="button" id="showSave" style="float: left;margin: 5;">Save This Animation</button>
+            <div id='genCount' style="float: left;margin: 5;">Generation #:?</div>
         </div>
         <br/>
         <div id="rateGroup" >

@@ -148,6 +148,10 @@ Environment.interactiveStep = function(){
     readyForRating = true;
 }
 
+Environment.beforeGeneration = function(generation){
+	$('#genCount').html('Generation #: '+generation);
+}
+
 Environment.afterGeneration = function(generation){
 	if(generation >= Environment.generations){
 		$('#evaluationControls').hide();

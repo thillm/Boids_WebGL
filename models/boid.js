@@ -1,6 +1,14 @@
 
 var wrap = true;
-
+/**
+*Constructor for an individual boid.
+*  poition - vec3 that gives the initial position of the boid
+*  velocity - vec3 that gives the initial velocity of the boid
+*  up - what is up in the simulation
+*  mass - what is the mass of the boid
+*  flockId - which flock group the boid belongs to. Different flock
+             groups will not interact with each other.
+*/
 boid = function(position,velocity,up,mass,flockId){
 	this.behaviors = [];
 	this.position = position;
@@ -10,18 +18,25 @@ boid = function(position,velocity,up,mass,flockId){
 	this.mass = mass;
 	this.side = vec3.create();
 	this.flockId = flockId;
-
+    
+    /*
+    *Add a behavior function. Ex) cohesion
+    */
 	this.addBehavior = function(toAdd){
 		this.behaviors.push(toAdd);
 	}
 
-	//boid functions
+	/*
+	 *Update function. Updates position and orientation.
+	 *Called once per simulation step.
+	 */
 	this.update = function(delta){
 		// update position based on velocity
 		this.position[0] += (this.velocity[0]*delta);
 		this.position[1] += (this.velocity[1]*delta);
 		this.position[2] += (this.velocity[2]*delta);
-
+        
+        //Wrap through walls if wrap is enabled
 		if (wrap){
 			if(position[0] < -halfWidths[0]){
 				position[0] = halfWidths[0];
@@ -39,7 +54,7 @@ boid = function(position,velocity,up,mass,flockId){
 				position[2] = -halfWidths[2];
 			}
 		}
-		else { // 'collision avoidance' moves position, ideally should adjust vector instead
+		else { // 'collision avoidance' work in progress
 			var distToMaxX = boxHW - this.position[0] + 0.0001;
 			var distToMinX = Math.abs(-boxHW - this.position[0] + 0.0001);
 			var distToMaxY = boxHW - this.position[1] + 0.0001;
@@ -53,6 +68,8 @@ boid = function(position,velocity,up,mass,flockId){
 			this.velocity[2] -= 1/distToMaxZ;
 			this.velocity[2] += 1/distToMinZ;
 		}
+
+		//Recaclulate the orientation vectors
 		vec3.normalize(this.velocity,this.forward);
 		vec3.cross(this.forward,[0,1,0],this.side);
 		vec3.normalize(this.side);
@@ -60,11 +77,18 @@ boid = function(position,velocity,up,mass,flockId){
 		vec3.normalize(this.up);
 	}
 
+	/**
+	 *Update the boid's velocity vector based on the 
+	 *  behavior functions applied to the boid.
+	 *Called once per simulation step.
+	 */
 	this.updateStearing = function(others,delta){
 		var steerVec = vec3.create();
+		//Clear the neighborhood for each behavior
 		for(var i=0; i<this.behaviors.length;i++){
 			this.behaviors[i].clearNeighborhood();
 		}
+		//All each behavior to maintain its own neighborhood
 		for(var i=0; i<others.length;i++){
 			if(others[i] == this){
 				continue;
@@ -73,25 +97,31 @@ boid = function(position,velocity,up,mass,flockId){
 				this.behaviors[j].addIfInNeighborhood(others[i]);
 			}
 		}
+		//cacluate the total force from all behavior functions
 		for(var i=0; i<this.behaviors.length;i++){
 			var sVec = this.behaviors[i].steer();
 			//console.log(sVec);
 			vec3.add(steerVec,sVec);
 		}
+		//If the force is over Max Force, scale to Max Force
 		var len = vec3.length(steerVec);
 		if(len > MAX_FORCE){
 			vec3.normalize(steerVec);
 			vec3.scale(steerVec,MAX_FORCE);
 		}
-		vec3.scale(steerVec,(delta/mass));
+		vec3.scale(steerVec,(delta/mass)); //Use delta time
 		vec3.add(velocity,steerVec);
 		len = vec3.length(velocity);
+		//If the speed is over maxSpeed, scale to maxSpeed
 		if(len > MAX_SPEED){
 			vec3.normalize(velocity);
 			vec3.scale(velocity,MAX_SPEED);
 		}
 	}
 
+	/**
+	 * Constructs the transformation matrix for the boid's current orientation.
+	 */
 	this.getTransformation = function(){
 
 		var transform = [ this.forward[0],  this.forward[1],       this.forward[2],    0,
@@ -102,6 +132,14 @@ boid = function(position,velocity,up,mass,flockId){
 	}
 };
 
+/**
+ * Constructor for a new behavior function.
+ * Weight - Relative influence this behavior has compared to others.
+ * mDist - Max distance to be in this behavior's neighborhood.
+ * angle - Angle to be in the boid's perception range.
+ * executor - The behavior function.
+ * boid - the boid being affected.
+ */
 behavior = function (weight,mDist,angle,executor,boid){
 	this.boid = boid;
 	this.weight = weight;
