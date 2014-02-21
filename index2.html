@@ -11,7 +11,7 @@
 <script type="text/javascript" src="models/boid.js"></script>
 <script type="text/javascript" src="models/pyramid.js"></script>
 <script type="text/javascript" src="models/flock.js"></script>
-
+<link rel="stylesheet" type="text/css" href="css/interface.css">
 
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
@@ -86,12 +86,23 @@
         <br/>
     </div>
     <div id="evaluationControls" style="text-align: center">
+		<div style="display: inline-block;">
+			 <button type="button" id="remember" style="float: left;margin: 5;">Remember</button>
+			 <button type="button" id="remove" style="float: left;margin: 5;">Remove</button>
+			 <button type="button" id="default" style="float: left;margin: 5;">Default</button>
+		</div>
         <div>
-            Rate each boid animation relative to the other animations in this generation. 
+            Pick a status for each animation.
+			<br/> 
+			By default animations will take part in the combining process to create new animations,
+			<br/> 
+			but will not appear in the next generation.
             <br/> 
-            5 is the highest rating while 1 is the lowest.
+            The "Remember" button keeps the selected animation so it will appear in the next generation.
             <br/>
-            The higher rated animations will continue and/or contribute genes in the next generation.
+            The "Remove" button will remove all trace of the selected animation when rating is finished. 
+			<br/> 
+			Removed animations will not contribute to new animations in the next generation.
             <br/>
         </div>
         <div style="display: inline-block;">
@@ -101,6 +112,10 @@
             <button type="button" id="showSave" style="float: left;margin: 5;">Save This Animation</button>
             <div id='genCount' style="float: left;margin: 5;">Generation #:?</div>
         </div>
+		<div id="population">
+			<ul>
+			</ul>
+		</div>
         <br/>
         <div id="rateGroup" >
             <input type="radio" id="rate1" name="rating" value="1"/>

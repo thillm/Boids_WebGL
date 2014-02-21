@@ -1,5 +1,4 @@
 var Environment = (function () {
-
 	var checkConfiguration = function(){
 		if (my.populationSize <= 0)
 			throw "Population size must be positive";
@@ -11,9 +10,10 @@ var Environment = (function () {
 			throw "Population Breed percent must be 0 < populationBreed <= 1"
 		if (my.generations <= 0)
 			throw "Generations must be positive";
+		/*
 		if (typeof my.fitnessFunction !== 'function'){
 			throw "Fitness function not present";	
-		}
+		}*/
 		if (my.Individual == undefined){
 			throw "Individuals are undefined";
 		} 
@@ -31,13 +31,17 @@ var Environment = (function () {
 
 	var populate = function(){
 		for (var i = 0; i < my.populationSize; i++){
-			var inhabitant = new my.Individual();
+			var inhabitant = new my.Individual(my.nextUId);
+			my.nextUId++;
 			my.inhabitants.push(inhabitant);	
 		}
-		my.evaluatePopulation();
+		//my.evaluatePopulation();
 	};
 
-        var DefaultIndividual = function() {
+    var DefaultIndividual = function(uid) {
+		this.uid = uid;
+		this.save = false;
+		this.kill = false;
 		this.chromosome = [Math.random()];
 		this.chromosomeLength = 1;
 		this.mate = function(mateIndividual){
@@ -50,15 +54,16 @@ var Environment = (function () {
 	//This is my return var public on the module
 	var my = {
 		name: 			'default environment',
+		nextUId:			1,
 		populationSize:  	0,
 		mutability: 		0.0,
 		populationLive: 	0.0,
 		populationBreed:    0.0, 
 		generations: 		0,
-		pruneEqualFitness:      true,
+		//pruneEqualFitness:      true,
                 Individual: 		DefaultIndividual,
 		inhabitants: 		new Array(),
-		fitnessFunction: 	undefined,
+		//fitnessFunction: 	undefined,
 		beforeGeneration: 	function(){},
 		afterGeneration: 	function(){},
 		generation: 		function(){},
@@ -78,14 +83,17 @@ var Environment = (function () {
 		}		
 	};
 
+	/*
     my.evaluatePopulation = function() {
 		for(individual in my.inhabitants){
 			my.inhabitants[individual].fitness = my.fitnessFunction(my.inhabitants[individual]);		
 		}
 		my.inhabitants.sort(my.sort);
     };
+	*/
         
     my.nextGeneration = function() {
+		/*
 		var keepSize = Math.round(my.inhabitants.length * my.populationLive);
 		var breedSize = Math.round(my.inhabitants.length * my.populationBreed);
 		var oldGeneration = my.inhabitants;
@@ -94,10 +102,24 @@ var Environment = (function () {
             my.pruneFitness();
         }
         //keepSize = my.inhabitants.length;
+		*/
+		
+		var oldGeneration = new Array();
+		var newGeneration = new Array();
+		for(var i=0; i < my.inhabitants.length; i++){
+			var individual = my.inhabitants[i];
+			if( individual.save === true ){
+				newGeneration.push(individual);
+			}			
+			if( individual.kill === false){
+				oldGeneration.push(individual);
+			}
+		}
+		my.inhabitants = newGeneration;
         
-        for (var popIndex = 0; my.inhabitants.length < my.populationSize; popIndex++){
-                var parentOne = oldGeneration[Math.floor(Math.random()*breedSize)];
-                var parentTwo = oldGeneration[Math.floor(Math.random()*breedSize)];
+        while (my.inhabitants.length < my.populationSize){
+                var parentOne = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
+                var parentTwo = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
         
                 my.inhabitants.push(parentOne.mate(my.mutability,parentTwo));
         }
@@ -107,6 +129,7 @@ var Environment = (function () {
 		my.inhabitants = new Array();
 		checkConfiguration();
 		my.currentgen = 0;
+		my.nextUId = 1;
 		populate();
 		my.generation();
 	};
@@ -124,7 +147,7 @@ var Environment = (function () {
 	}
 
 	my.generationAfterInteractiveStep = function(){
-		my.evaluatePopulation();
+		//my.evaluatePopulation();
 		my.nextGeneration();
 		my.currentgen++;						
 	
@@ -132,6 +155,7 @@ var Environment = (function () {
 	}
 	
 	//default sorting of inhabitants by fitness. can be overriden if a different sort is required
+	/*
 	my.pruneFitness = function() {
 		if (my.inhabitants.length <= 0){
 			throw "Cannot sort - no inhabitants";
@@ -157,7 +181,7 @@ var Environment = (function () {
                 return 1;
             return 0;
         };
-	
+	/*
 	my.run = function() {
 		try {
 			checkConfiguration();
@@ -173,7 +197,7 @@ var Environment = (function () {
 			console.log('Error, Cannot run environment ' + my.name +  ': ' + e);
 		}
 		return my.inhabitants;
-	};
+	}*/
 	
 	return my;
 }());

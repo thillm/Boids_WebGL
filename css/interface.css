@@ -1,0 +1,38 @@
+#population {
+    width: 650px;
+    height: 35px;
+    font-size: 16px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    text-align: center;
+	margin-left: auto ;
+	margin-right: auto ;
+}
+
+#population ul {
+    height: auto;
+    padding: 8px 0px;
+    margin: 0px;
+}
+
+#population li { 
+display: inline; 
+padding: 10px;
+margin: 2px; 
+cursor: pointer;
+background-color: #8AD9FF;
+        border-radius: 8px;
+}
+
+#population li.saved{
+background-color: #00FF00;
+        border-radius: 2px;
+}
+
+#population li.kill{
+background-color: #FF0000;
+        border-radius: 2px;
+}
+[picked="true"]{
+	border:2px solid;
+}

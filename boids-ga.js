@@ -2,7 +2,7 @@ readyForRating = false; //Are we waiting for user raiting
 memberIndex = 0; //Index of the current boid simulation in the population
 userRating = []; //Array holding rating of current generation
 DEFAULT_RATING = 3; //Default user rating
-
+nextBoidId = 0; //Keeps track of the next Unique boid id
 
 $(document).ready(function(){
 	$('#evaluationControls').hide(); //hide evaluation controls at start
@@ -14,9 +14,45 @@ $(document).ready(function(){
 		var popBreed = Math.min($('#populationBreed').val()/100,1);
 		Environment.configure({'populationSize':popSize,'generations':generations, 'mutability':mutability,'populationLive':popDie,'populationBreed':popBreed,'pruneEqualFitness':false});
         Environment.init();
+		initPopulationList();
 		$('#configOptions').hide();
 		$('#result').hide();
 		$('#evaluationControls').show();
+	});
+	$('#remember').click(function(){ //next button callback function
+		if(readyForRating){
+			$('[picked="true"]').each(function(){
+				var index = parseInt( $(this).attr("index"));
+				var individual = Environment.inhabitants[index];
+				individual.save = true;
+				individual.kill = false;
+				$(this).attr('class','saved');
+			});
+		}
+	});
+	
+	$('#remove').click(function(){ //next button callback function
+		if(readyForRating){
+			$('[picked="true"]').each(function(){
+				var index = parseInt( $(this).attr("index"));
+				var individual = Environment.inhabitants[index];
+				individual.save = false;
+				individual.kill = true;
+				$(this).attr('class','kill');
+			});
+		}
+	});
+	
+	$('#default').click(function(){ //next button callback function
+		if(readyForRating){
+			$('[picked="true"]').each(function(){
+				var index = parseInt( $(this).attr("index"));
+				var individual = Environment.inhabitants[index];
+				individual.save = false;
+				individual.kill = false;
+				$(this).attr('class','');
+			});
+		}
 	});
 
 	$('#next').click(function(){ //next button callback function
@@ -81,6 +117,40 @@ $(document).ready(function(){
 	});
 });
 
+function initPopulationList(){
+	var popList = $('#population ul');
+	popList.empty();
+	for(var i=0; i < Environment.inhabitants.length; i++){
+		var member = Environment.inhabitants[i];
+		var entry = '<li picked="false" index="'+i+'">'+member.uid+'</li>'; 
+		popList.append(entry);
+	}
+	$('#population li').click(function(){
+		if(readyForRating){
+			$('#population li').attr("picked","false");
+			$(this).attr("picked","true");
+			var index = parseInt( $(this).attr("index"));
+			loadMember(index);
+			$('#result').hide();
+		}
+	});
+}
+
+function updatePopulationList(){
+	$('#population li').each(function(){
+		var index = parseInt( $(this).attr("index"));
+		var individual = Environment.inhabitants[index];
+		if(individual.save){
+			$(this).attr('class','saved');
+		}else if(individual.kill){
+			$(this).attr('class','kill');
+		}else{
+			$(this).attr('class','');
+		}
+		$(this).text(individual.uid);
+	});
+}
+
 /*
  *Load a member of the current population.
  *index - index in the population
@@ -119,8 +189,11 @@ function loadMember(index){
 /*
  *Constructor for a new individual
  */
-Environment.Individual = function(){
-	this.fitness = 0;
+Environment.Individual = function(uid){
+	this.uid = uid;
+	this.save = false;
+	this.kill = false;
+	//this.fitness = 0;
 	this.chromosomeLength = 43;
 	this.chromosome = new Array();
 	for (var i = 0; i < this.chromosomeLength;i++){
@@ -130,7 +203,7 @@ Environment.Individual = function(){
         if (!mate.chromosome){
                 throw "Mate does not have a chromosome";
         }
-        var newGuy = new Environment.Individual();
+        var newGuy = new Environment.Individual(Environment.nextUId++);
         var crossOverPoint = Math.floor(Math.random()*this.chromosomeLength);
         newGuy.chromosome = this.chromosome.slice(0,crossOverPoint).concat(mate.chromosome.slice(crossOverPoint,this.chromosomeLength));
 
@@ -144,11 +217,12 @@ Environment.Individual = function(){
 
 /*
  *Fitness function. Just looks at user rating.
- */
+ 
 Environment.fitnessFunction = function(individual){
 	return userRating[Environment.inhabitants.indexOf(individual)];
 }
-
+ */
+ 
 /*
  *Starts the interactive rating for the current generation.
  */
@@ -156,8 +230,8 @@ Environment.interactiveStep = function(){
 	for(var i=0; i<Environment.inhabitants.length;i++){
 		userRating[i] = DEFAULT_RATING;
 	}
-	memberIndex = 0;
-	loadMember(memberIndex);
+	loadMember(0);
+	updatePopulationList();
     readyForRating = true;
 }
 
