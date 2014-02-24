@@ -33,6 +33,21 @@ background-color: #00FF00;
 background-color: #FF0000;
         border-radius: 2px;
 }
+
+.centered{
+	margin:50px 0px; padding:0px;
+	text-align:center;
+}
+
+#instructions {
+	width:600px;
+	margin: 0px auto;
+	padding: 15px;
+	border:1px dashed #333;
+    text-align: left;
+	
+}
+
 [picked="true"]{
 	border:2px solid;
 }

@@ -18,6 +18,7 @@ $(document).ready(function(){
 		$('#configOptions').hide();
 		$('#result').hide();
 		$('#evaluationControls').show();
+		$('#instructions').hide();
 	});
 	$('#remember').click(function(){ //next button callback function
 		if(readyForRating){
@@ -55,28 +56,6 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#next').click(function(){ //next button callback function
-		if(readyForRating){
-			memberIndex+=1;
-			if(memberIndex >= Environment.inhabitants.length){
-				memberIndex = 0;
-			}
-			loadMember(memberIndex);
-			$('#result').hide();
-		}
-	});
-
-	$('#previous').click(function(){ //previous button callback function
-		if(readyForRating){
-			memberIndex-=1;
-			if(memberIndex < 0){
-				memberIndex = Environment.inhabitants.length-1;
-			}
-			loadMember(memberIndex);
-			$('#result').hide();
-		}
-	});
-
 	$('#rateButton').click(function(){ //rateButton callback function
 		if(readyForRating){
 			readyForRating = false;
@@ -84,16 +63,15 @@ $(document).ready(function(){
 			Environment.generationAfterInteractiveStep();
 		}
 	});
-
-	$('#rateGroup').click(function(){ //handles radio button clicks
-		if(readyForRating){
-			userRating[memberIndex] = $('input[name=rating]:checked').val();
-		}
-	});
 	$('#showSave').click(function(){ //save button callback
 		if(readyForRating){
 			$('#result').html(getLoadText(Environment.inhabitants[memberIndex].chromosome));
 			$('#result').show();
+		}
+	});
+	$('#showInstructions').click(function(){ //save button callback
+		if(readyForRating){
+			$('#instructions').toggle();
 		}
 	});
 	$('#quit').click(function(){ //quit button callback
@@ -215,14 +193,6 @@ Environment.Individual = function(uid){
     }
 }
 
-/*
- *Fitness function. Just looks at user rating.
- 
-Environment.fitnessFunction = function(individual){
-	return userRating[Environment.inhabitants.indexOf(individual)];
-}
- */
- 
 /*
  *Starts the interactive rating for the current generation.
  */

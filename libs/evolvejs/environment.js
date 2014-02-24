@@ -10,10 +10,6 @@ var Environment = (function () {
 			throw "Population Breed percent must be 0 < populationBreed <= 1"
 		if (my.generations <= 0)
 			throw "Generations must be positive";
-		/*
-		if (typeof my.fitnessFunction !== 'function'){
-			throw "Fitness function not present";	
-		}*/
 		if (my.Individual == undefined){
 			throw "Individuals are undefined";
 		} 
@@ -35,7 +31,6 @@ var Environment = (function () {
 			my.nextUId++;
 			my.inhabitants.push(inhabitant);	
 		}
-		//my.evaluatePopulation();
 	};
 
     var DefaultIndividual = function(uid) {
@@ -60,10 +55,8 @@ var Environment = (function () {
 		populationLive: 	0.0,
 		populationBreed:    0.0, 
 		generations: 		0,
-		//pruneEqualFitness:      true,
                 Individual: 		DefaultIndividual,
 		inhabitants: 		new Array(),
-		//fitnessFunction: 	undefined,
 		beforeGeneration: 	function(){},
 		afterGeneration: 	function(){},
 		generation: 		function(){},
@@ -82,28 +75,8 @@ var Environment = (function () {
 			}
 		}		
 	};
-
-	/*
-    my.evaluatePopulation = function() {
-		for(individual in my.inhabitants){
-			my.inhabitants[individual].fitness = my.fitnessFunction(my.inhabitants[individual]);		
-		}
-		my.inhabitants.sort(my.sort);
-    };
-	*/
         
-    my.nextGeneration = function() {
-		/*
-		var keepSize = Math.round(my.inhabitants.length * my.populationLive);
-		var breedSize = Math.round(my.inhabitants.length * my.populationBreed);
-		var oldGeneration = my.inhabitants;
-		my.inhabitants = my.inhabitants.slice(0,keepSize);
-        if (my.pruneEqualFitness){
-            my.pruneFitness();
-        }
-        //keepSize = my.inhabitants.length;
-		*/
-		
+    my.nextGeneration = function() {	
 		var oldGeneration = new Array();
 		var newGeneration = new Array();
 		for(var i=0; i < my.inhabitants.length; i++){
@@ -147,57 +120,11 @@ var Environment = (function () {
 	}
 
 	my.generationAfterInteractiveStep = function(){
-		//my.evaluatePopulation();
 		my.nextGeneration();
 		my.currentgen++;						
 	
 		return my.afterGeneration(my.currentgen);
 	}
-	
-	//default sorting of inhabitants by fitness. can be overriden if a different sort is required
-	/*
-	my.pruneFitness = function() {
-		if (my.inhabitants.length <= 0){
-			throw "Cannot sort - no inhabitants";
-		}
-
-                for (var i=0;i<my.inhabitants.length-1;i++){
-                    for(var j=i+1;j<my.inhabitants.length && i<my.inhabitants.length-1;j++){
-                                                
-                        if(my.inhabitants[i].fitness!=my.inhabitants[j].fitness)
-                            break;
-
-                        my.inhabitants = my.inhabitants.slice(0,i).concat(my.inhabitants.slice(j-1));
-                        
-                    }
-                }
-                 return my.inhabitants;
-	};
-	
-        my.sort = function(a,b) {
-            if (b.fitness < a.fitness)
-                return -1;
-            if (a.fitness < b.fitness)
-                return 1;
-            return 0;
-        };
-	/*
-	my.run = function() {
-		try {
-			checkConfiguration();
-			populate();
-			for (var generation = 0; generation < my.generations; generation++){
-				my.beforeGeneration(generation);
-				my.nextGeneration();
-				my.evaluatePopulation();
-				my.afterGeneration(generation);
-			}			
-		} 
-		catch (e) {
-			console.log('Error, Cannot run environment ' + my.name +  ': ' + e);
-		}
-		return my.inhabitants;
-	}*/
 	
 	return my;
 }());
