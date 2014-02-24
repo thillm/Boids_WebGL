@@ -35,14 +35,14 @@ background-color: #FF0000;
 }
 
 .centered{
-	margin:50px 0px; padding:0px;
+	margin:0px 0px; padding:0px;
 	text-align:center;
 }
 
 #instructions {
 	width:600px;
 	margin: 0px auto;
-	padding: 15px;
+	padding: 5px;
 	border:1px dashed #333;
     text-align: left;
 	
