@@ -12,11 +12,13 @@ $(document).ready(function(){
 		var mutability = Math.min($('#mutabilityPercent').val()/100,1);
 		var popDie = Math.min($('#populationLive').val()/100,1);
 		var popBreed = Math.min($('#populationBreed').val()/100,1);
+		$('#population ul').empty();
 		Environment.configure({'populationSize':popSize,'generations':generations, 'mutability':mutability,'populationLive':popDie,'populationBreed':popBreed,'pruneEqualFitness':false});
         Environment.init();
 		initPopulationList();
 		$('#configOptions').hide();
 		$('#result').hide();
+		hideFinalSelection();
 		$('#evaluationControls').show();
 		$('#instructions').hide();
 	});
@@ -63,6 +65,21 @@ $(document).ready(function(){
 			Environment.generationAfterInteractiveStep();
 		}
 	});
+	$('#finalButton').click(function(){
+		hideFinalSelection();
+		$('#evaluationControls').hide();
+		$('[picked="true"]').each(function(){
+			var index = parseInt( $(this).attr("index"));
+			var best = Environment.inhabitants[index];
+			$('#result').html(
+				"Your favorite animation is being displayed! <br/>"+
+				getLoadText(best.chromosome)
+			);
+			$('#result').show();
+			
+			
+		});
+	});
 	$('#showSave').click(function(){ //save button callback
 		if(readyForRating){
 			$('#result').html(getLoadText(Environment.inhabitants[memberIndex].chromosome));
@@ -97,7 +114,6 @@ $(document).ready(function(){
 
 function initPopulationList(){
 	var popList = $('#population ul');
-	popList.empty();
 	for(var i=0; i < Environment.inhabitants.length; i++){
 		var member = Environment.inhabitants[i];
 		var entry = '<li picked="false" index="'+i+'">'+member.uid+'</li>'; 
@@ -112,6 +128,7 @@ function initPopulationList(){
 			$('#result').hide();
 		}
 	});
+	updatePopulationList();
 }
 
 function updatePopulationList(){
@@ -127,6 +144,18 @@ function updatePopulationList(){
 		}
 		$(this).text(individual.uid);
 	});
+}
+
+function showFinalSelection(){
+	$('#buttonBar').hide();
+	$('#rateButton').hide();
+	$('#finalSelection').show();
+}
+
+function hideFinalSelection(){
+	$('#buttonBar').show();
+	$('#rateButton').show();
+	$('#finalSelection').hide();
 }
 
 /*
@@ -219,7 +248,10 @@ Environment.beforeGeneration = function(generation){
  */
 Environment.afterGeneration = function(generation){
 	if(generation >= Environment.generations){
-		$('#evaluationControls').hide();
+		//$('#evaluationControls').hide();
+		showFinalSelection();
+		 readyForRating = true;
+		 /*
 		var best = Environment.inhabitants[0];
 		loadMember(0);
 		$('#result').html(
@@ -227,6 +259,7 @@ Environment.afterGeneration = function(generation){
 			getLoadText(best.chromosome)
 		);
 		$('#result').show();
+		*/
 	}else{
 		Environment.generation();
 	}

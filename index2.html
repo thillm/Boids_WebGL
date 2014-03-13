@@ -63,19 +63,17 @@
         <input type="text" id="numGenerations" value='6'></input>
         <br />
         <label for="mutabilityPercent">Mutability percent</label>
-        <input type="text" id="mutabilityPercent" value='90'></input>
+        <input type="text" id="mutabilityPercent" value='50'></input>
         <br />
         <label for="populationSize">Population Size</label>
-        <input type="text" id="populationSize" value='16'></input>
+        <input type="text" id="populationSize" value='10'></input>
         <br/>
         <button type="button" id="start">Start</button>
         <br/>
         <br/>
     </div>
     <div id="evaluationControls" style="text-align: center">
-		<div style="display: inline-block;">
 
-		</div>
 		<div class="centered">
         <div id="instructions">
 			<u><b>Instructions</b></u><br>
@@ -93,7 +91,7 @@
             <br/>
         </div>
 		</div>
-        <div style="display: inline-block;">
+        <div id="buttonBar" style="display: inline-block;">
 			<button type="button" id="remember" style="float: left;margin: 5;">Remember</button>
 			 <button type="button" id="remove" style="float: left;margin: 5;">Remove</button>
 			 <button type="button" id="default" style="float: left;margin: 5;">Default</button>
@@ -106,9 +104,12 @@
 			<ul>
 			</ul>
 		</div>
+		<div id="finalSelection" class="centered">
+		Select your favorite animation and then click the finish button. </br>
+		<button type="button" id="finalButton">Finish</button> 
+		</div>
         <br/>
-        <button type="button" id="rateButton">Finished Rating This Generation</button>
-        
+        <button type="button" id="rateButton">Finished Rating This Generation</button>    
     </div>
     <br/>
     <div id="result" style="text-align: center"> </div>
