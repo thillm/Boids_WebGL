@@ -54,7 +54,11 @@
     <div id="configOptions" style="text-align: center">
         (Recomended to run in fullscreen. Toggle fullscreen with F11)
         <h1>Load a Previously Saved Animation</h1>
-        <label for="loadField">Load a saved boid animation:</label>
+		<label for="netloadField">Enter the network save code to load from the server:</label>
+		<input type="text" id="netloadField" onclick='this.focus();this.select()' value='Paste Here'></input>
+		<button type="button" id="netloadButton">Load</button>
+        <br/>
+        <label for="loadField">Load a boid animation by pasting animation data:</label>
         <input type="text" id="loadField" onclick='this.focus();this.select()' value='Paste Here'></input>
         <button type="button" id="loadButton">Load</button>
         <br/>
@@ -75,7 +79,7 @@
     <div id="evaluationControls" style="text-align: center">
 
 		<div class="centered">
-        <div id="instructions">
+        <div id="instructions" class="dashedBox">
 			<u><b>Instructions</b></u><br>
             Pick a status for each animation.
 			<br/> 
@@ -112,7 +116,7 @@
         <button type="button" id="rateButton">Finished Rating This Generation</button>    
     </div>
     <br/>
-    <div id="result" style="text-align: center"> </div>
+    <div id="result" class="dashedBox"> </div>
     <div id="quitDiv" style="text-align: center">
         <button type="button" id="quit">Return to Main</button>
     </div>

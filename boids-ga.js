@@ -6,6 +6,7 @@ nextBoidId = 0; //Keeps track of the next Unique boid id
 
 $(document).ready(function(){
 	$('#evaluationControls').hide(); //hide evaluation controls at start
+	$('#result').hide();
 	$('#start').click(function(){ //start button callback function
 		var popSize = $('#populationSize').val();
 		var generations = $('#numGenerations').val();
@@ -17,10 +18,10 @@ $(document).ready(function(){
         Environment.init();
 		initPopulationList();
 		$('#configOptions').hide();
-		$('#result').hide();
 		hideFinalSelection();
 		$('#evaluationControls').show();
 		$('#instructions').hide();
+		$('#result').hide();
 	});
 	$('#remember').click(function(){ //next button callback function
 		if(readyForRating){
@@ -70,13 +71,30 @@ $(document).ready(function(){
 		$('#evaluationControls').hide();
 		$('[picked="true"]').each(function(){
 			var index = parseInt( $(this).attr("index"));
-			var best = Environment.inhabitants[index];
-			$('#result').html(
-				"Your favorite animation is being displayed! <br/>"+
-				getLoadText(best.chromosome)
-			);
-			$('#result').show();
-			
+			var best = Environment.inhabitants[index].chromosome;
+			$.ajax({url: 'store.php',
+			        data: {action: 'boidData',
+					       data: "["+best.toString()+"]"},
+				    type: 'post',
+					success: function(data){
+					    $('#result').html(
+							"Your favorite animation is being displayed! <br/>"+
+							"Network Save Code: <b>"+data+"</b> <br/>"+
+							"Animation Data: <br/>"+
+							getLoadText(best)
+						);
+					  $('#result').show();
+					},
+					error: function(data){
+						$('#result').html(
+							"Your favorite animation is being displayed! <br/>"+
+							"We were unable to Save on the remote sever, but you can still copy the animation directly below. </br>"+
+							"Animation Data: <br/>"+
+							getLoadText(best)
+						);
+					    $('#result').show();
+					}
+			});
 			
 		});
 	});
@@ -109,6 +127,29 @@ $(document).ready(function(){
 		}catch (e){
 			alert("Error: Invalid Load String.");
 		}
+	});
+	$('#netloadButton').click(function(){ //network load button callback
+		var animationId = $('#netloadField').val().trim();
+		$.ajax({url: 'store.php',
+			data: {action: 'loadBoid',
+				   id: animationId},
+			type: 'get',
+			success: function(data){
+				var boidParams;
+				try{
+					boidParams = JSON.parse(data);
+					loadBoids(boidParams);
+					$('#result').html(getLoadText(boidParams));
+					$('#result').show();
+					$('#configOptions').hide();
+				}catch (e){
+					alert("Error: Invalid Load String.");
+				}
+			},
+			error: function(data){
+				alert("Could not find the animation");
+			}
+		});
 	});
 });
 

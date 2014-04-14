@@ -39,7 +39,7 @@ background-color: #FF0000;
 	text-align:center;
 }
 
-#instructions {
+.dashedBox {
 	width:600px;
 	margin: 0px auto;
 	padding: 5px;
