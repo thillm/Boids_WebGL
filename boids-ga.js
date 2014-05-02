@@ -79,6 +79,7 @@ $(document).ready(function(){
 					success: function(data){
 					    $('#result').html(
 							"Your favorite animation is being displayed! <br/>"+
+							'<a href="https://docs.google.com/forms/d/1ZW1RzSnarUJWyDBYC4EiMmQi3kG9PohHYo0KEh_koec/viewform">Please take a moment to fill out quick survey on this project</a><\br>'+
 							"Network Save Code: <b>"+data+"</b> <br/>"+
 							"Animation Data: <br/>"+
 							getLoadText(best)
@@ -104,7 +105,7 @@ $(document).ready(function(){
 			$('#result').show();
 		}
 	});
-	$('#showInstructions').click(function(){ //save button callback
+	$('#showInstructions').click(function(){ //instructions button callback
 		if(readyForRating){
 			$('#instructions').toggle();
 		}
@@ -139,7 +140,9 @@ $(document).ready(function(){
 				try{
 					boidParams = JSON.parse(data);
 					loadBoids(boidParams);
-					$('#result').html(getLoadText(boidParams));
+					$('#result').html(
+					'<a href="https://docs.google.com/forms/d/1ZW1RzSnarUJWyDBYC4EiMmQi3kG9PohHYo0KEh_koec/viewform">Please take a moment to fill out quick survey on this project</a><\br>'+
+					getLoadText(boidParams));
 					$('#result').show();
 					$('#configOptions').hide();
 				}catch (e){

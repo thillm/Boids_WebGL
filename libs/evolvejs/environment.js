@@ -89,13 +89,19 @@ var Environment = (function () {
 			}
 		}
 		my.inhabitants = newGeneration;
-        
-        while (my.inhabitants.length < my.populationSize){
-                var parentOne = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
-                var parentTwo = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
-        
-                my.inhabitants.push(parentOne.mate(my.mutability,parentTwo));
+        if(oldGeneration.length > 0){
+			while (my.inhabitants.length < my.populationSize){
+					var parentOne = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
+					var parentTwo = oldGeneration[Math.floor(Math.random()*oldGeneration.length)];
+			
+					my.inhabitants.push(parentOne.mate(my.mutability,parentTwo));
         }
+		}else{
+			while (my.inhabitants.length < my.populationSize){
+				var newGuy = new Environment.Individual(Environment.nextUId++);
+				my.inhabitants.push(newGuy);
+			}
+		}
 	};
 
 	my.init = function() {

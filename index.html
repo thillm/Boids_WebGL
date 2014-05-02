@@ -52,7 +52,7 @@
 
     <br/>
     <div id="configOptions" style="text-align: center">
-        (Recomended to run in fullscreen. Toggle fullscreen with F11)
+        (Recomended to run in fullscreen. Toggle fullscreen with F11) </br>
         <h1>Load a Previously Saved Animation</h1>
 		<label for="netloadField">Enter the network save code to load from the server:</label>
 		<input type="text" id="netloadField" onclick='this.focus();this.select()' value='Paste Here'></input>
@@ -63,6 +63,12 @@
         <button type="button" id="loadButton">Load</button>
         <br/>
         <h1>Create new Boid Animations Using a Genetic Algorithm</h1>
+		<div  class="dashedBox">
+			This program will combine flocking animations that you select to create new animations.</br>
+			Your goal as the animator is to create a flocking animation that best shows one of the following emotions: 
+			<b>Anger, Fear, Joy, Sadness or Surprise</b>. </br>
+			When you finish please share your creation with us by filling out the short survey  <a href="https://docs.google.com/forms/d/1ZW1RzSnarUJWyDBYC4EiMmQi3kG9PohHYo0KEh_koec/viewform">here</a>
+		</div>
         <label for="numGenerations">Number of generations</label>
         <input type="text" id="numGenerations" value='6'></input>
         <br />
@@ -100,7 +106,7 @@
 			 <button type="button" id="remove" style="float: left;margin: 5;">Remove</button>
 			 <button type="button" id="default" style="float: left;margin: 5;">Default</button>
             <div id='count' style="float: left;margin: 5;">? of ?</div>
-            <button type="button" id="showSave" style="float: left;margin: 5;">Save Code</button>
+            <button type="button" id="showSave" style="float: left;margin: 5;">Animation Data</button>
             <div id='genCount' style="float: left;margin: 5;">Generation #:?</div>
 			<button type='button' id='showInstructions' style="float: left;margin: 5;">Toggle Instructions</button>
         </div>
