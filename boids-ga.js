@@ -79,8 +79,8 @@ $(document).ready(function(){
 					success: function(data){
 					    $('#result').html(
 							"Your favorite animation is being displayed! <br/>"+
-							'<a href="https://docs.google.com/forms/d/1ZW1RzSnarUJWyDBYC4EiMmQi3kG9PohHYo0KEh_koec/viewform">Please take a moment to fill out quick survey on this project</a><\br>'+
-							"Network Save Code: <b>"+data+"</b> <br/>"+
+							'<a href="https://docs.google.com/forms/d/1ZW1RzSnarUJWyDBYC4EiMmQi3kG9PohHYo0KEh_koec/viewform">Please take a moment to share your results with us.</a>'+
+							"<br/>Network Save Code: <b>"+data+"</b> <br/>"+
 							"Animation Data: <br/>"+
 							getLoadText(best)
 						);
@@ -89,7 +89,7 @@ $(document).ready(function(){
 					error: function(data){
 						$('#result').html(
 							"Your favorite animation is being displayed! <br/>"+
-							"We were unable to Save on the remote sever, but you can still copy the animation directly below. </br>"+
+							"We were unable to Save on the remote sever, but you can still copy the animation directly below. <br/>"+
 							"Animation Data: <br/>"+
 							getLoadText(best)
 						);
