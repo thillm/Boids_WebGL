@@ -164,7 +164,7 @@ var wallVertexColorBuffer;
 function initBuffers() {
     boidVertexPositionBuffer = gl.createBuffer();
     boidVertexColorBuffer = gl.createBuffer();
-    setupPyramidBuffers(boidVertexPositionBuffer,boidVertexColorBuffer,gl);
+    setupBoidBuffers(boidVertexPositionBuffer,boidVertexColorBuffer,gl);
 
     wallVertexPositionBuffer = gl.createBuffer();
     wallVertexColorBuffer = gl.createBuffer();

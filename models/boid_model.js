@@ -1,8 +1,8 @@
    /*
     *Sets buffers to load all of the position and color information for the boid model.
     */
-    setupPyramidBuffers = function (pyramidVertexPositionBuffer,pyramidVertexColorBuffer,gl) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexPositionBuffer);
+    setupBoidBuffers = function (boidVertexPositionBuffer,boidVertexColorBuffer,gl) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexPositionBuffer);
         var vertices = [
             // Front face1
              0.0,  1.0,  0.0,
@@ -45,11 +45,11 @@
             -1.0, -1.0, -1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-        pyramidVertexPositionBuffer.itemSize = 3;
-        pyramidVertexPositionBuffer.numItems = 24;
+        boidVertexPositionBuffer.itemSize = 3;
+        boidVertexPositionBuffer.numItems = 24;
 
-        //pyramidVertexColorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, pyramidVertexColorBuffer);
+        //boidVertexColorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, boidVertexColorBuffer);
         var colors = [
             // Front face
             1.0, 0.0, 0.0, 1.0,
@@ -92,6 +92,6 @@
             1.0, 1.0, 0.0, 1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-        pyramidVertexColorBuffer.itemSize = 4;
-        pyramidVertexColorBuffer.numItems = 24;
+        boidVertexColorBuffer.itemSize = 4;
+        boidVertexColorBuffer.numItems = 24;
     };
